@@ -1,26 +1,217 @@
 @import "tailwindcss";
 
+/* =========================================
+   GOLDEN H.N HLASE UPHOLSTERY THEME
+   Luxury Black • Gold • White Branding
+========================================= */
+
 :root {
+  /* Core Colors */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Brand Colors */
+  --primary: #c8a96b;
+  --primary-dark: #9f814c;
+  --secondary: #111111;
+  --accent: #f5f1e8;
+
+  /* UI Colors */
+  --border: #e5e5e5;
+  --muted: #6b7280;
+  --card: #ffffff;
+
+  /* Typography */
+  --font-body: Arial, Helvetica, sans-serif;
+
+  /* SEO + UX enhancements */
+  color-scheme: light;
+  scroll-behavior: smooth;
 }
 
-/* Tailwind theme variables */
+/* Tailwind Theme Variables */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+
+  --font-sans: var(--font-body);
 }
 
-/* Light mode only (clean luxury white UI) */
+/* =========================================
+   GLOBAL BODY
+========================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Optional: keep dark mode disabled OR safe fallback */
+/* =========================================
+   SEO + ACCESSIBILITY IMPROVEMENTS
+========================================= */
+
+/* Better focus visibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Improve image rendering */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Improve button UX */
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Improve links for SEO + UX */
+a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+/* Better text selection */
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+/* =========================================
+   LUXURY SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* =========================================
+   CONTAINER SPACING
+========================================= */
+
+section {
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+/* =========================================
+   LUXURY TEXT STYLES
+========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--secondary);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  color: #444;
+  line-height: 1.7;
+}
+
+/* =========================================
+   PREMIUM BUTTON STYLES
+========================================= */
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-dark {
+  background: var(--secondary);
+  color: white;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   CARD DESIGN
+========================================= */
+
+.card-luxury {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card-luxury:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================
+   SAFE DARK MODE FALLBACK
+========================================= */
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ffffff;
@@ -30,5 +221,23 @@ body {
   body {
     background: var(--background);
     color: var(--foreground);
+  }
+}
+
+/* =========================================
+   MOBILE OPTIMIZATION
+========================================= */
+
+@media (max-width: 768px) {
+  h1 {
+    line-height: 1.1;
+  }
+
+  p {
+    line-height: 1.6;
+  }
+
+  .container {
+    padding-inline: 1.2rem;
   }
 }

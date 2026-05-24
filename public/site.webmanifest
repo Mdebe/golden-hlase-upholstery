@@ -1,0 +1,21 @@
+{
+  "name": "Golden H.N Hlase Upholstery",
+  "short_name": "Golden Upholstery",
+  "description": "Luxury seat covers and premium upholstery services in Richards Bay.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#c8a96b",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
