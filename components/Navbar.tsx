@@ -7,11 +7,10 @@ import { useState } from 'react';
 
 const links = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '#about' },
-  { name: 'Services', href: '#services' },
-  { name: 'Portfolio', href: '#portfolio' },
-  { name: 'Testimonials', href: '#testimonials' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'About', href: '/about' },
+  { name: 'Services', href: '/services' },
+  { name: 'Portfolio', href: '/portfolio' },
+  { name: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {
@@ -35,7 +34,7 @@ export default function Navbar() {
           flex items-center justify-between
         "
       >
-        {/* Logo Only */}
+        {/* Logo */}
         <Link
           href="/"
           className="
@@ -96,21 +95,23 @@ export default function Navbar() {
           ))}
 
           {/* CTA Button */}
-          <button
-            className="
-              px-7 py-3 rounded-full
-              bg-[#D4AF37]
-              text-black
-              font-semibold
-              tracking-wide
-              hover:scale-105
-              hover:bg-[#C9971C]
-              transition duration-300
-              shadow-xl shadow-[#D4AF37]/20
-            "
-          >
-            Get Quote
-          </button>
+          <Link href="/contact">
+            <button
+              className="
+                px-7 py-3 rounded-full
+                bg-[#D4AF37]
+                text-black
+                font-semibold
+                tracking-wide
+                hover:scale-105
+                hover:bg-[#C9971C]
+                transition duration-300
+                shadow-xl shadow-[#D4AF37]/20
+              "
+            >
+              Get Quote
+            </button>
+          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -146,6 +147,7 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
+              onClick={() => setOpen(false)}
               className="
                 text-gray-300
                 hover:text-[#D4AF37]
@@ -160,18 +162,23 @@ export default function Navbar() {
           ))}
 
           {/* Mobile CTA */}
-          <button
-            className="
-              mt-4 py-4 rounded-full
-              bg-[#D4AF37]
-              text-black
-              font-semibold
-              tracking-wide
-              shadow-lg shadow-[#D4AF37]/20
-            "
+          <Link
+            href="/contact"
+            onClick={() => setOpen(false)}
           >
-            Get Quote
-          </button>
+            <button
+              className="
+                mt-4 w-full py-4 rounded-full
+                bg-[#D4AF37]
+                text-black
+                font-semibold
+                tracking-wide
+                shadow-lg shadow-[#D4AF37]/20
+              "
+            >
+              Get Quote
+            </button>
+          </Link>
         </div>
       )}
     </header>

@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 
 const heroImages = [
-  '/images/seat-cover-12.jpeg',
+  '/images/golden.jpg',
   '/images/hero.jpeg',
   '/images/seat-cover-3.jpg',
   '/images/seat-cover-4.jpg',
