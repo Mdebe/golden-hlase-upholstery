@@ -1,36 +1,25 @@
-import { MetadataRoute } from 'next';
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: 'https://goldenhnhlase.co.za',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: 'https://goldenhnhlase.co.za/about',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://goldenhnhlase.co.za/services',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: 'https://goldenhnhlase.co.za/portfolio',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://goldenhnhlase.co.za/contact',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-  ];
-}
+  <url>
+    <loc>https://www.goldenhnhlase.co.za/</loc>
+  </url>
+
+  <url>
+    <loc>https://www.goldenhnhlase.co.za/about</loc>
+  </url>
+
+  <url>
+    <loc>https://www.goldenhnhlase.co.za/services</loc>
+  </url>
+
+  <url>
+    <loc>https://www.goldenhnhlase.co.za/portfolio</loc>
+  </url>
+
+  <url>
+    <loc>https://www.goldenhnhlase.co.za/contact</loc>
+  </url>
+
+</urlset>
