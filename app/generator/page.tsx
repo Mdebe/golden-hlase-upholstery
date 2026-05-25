@@ -5,36 +5,89 @@ import { useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-export default function InvoicePage() {
-  const invoiceRef = useRef<HTMLDivElement>(null);
+type Item = {
+  description: string;
+  quantity: number;
+  price: number;
+};
+
+export default function GeneratorPage() {
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   const [customer, setCustomer] = useState('');
   const [phone, setPhone] = useState('');
-  const [service, setService] = useState('');
-  const [amount, setAmount] = useState('');
-  const [invoiceNo, setInvoiceNo] = useState('INV-001');
+  const [docNumber, setDocNumber] = useState('GHH-001');
   const [date, setDate] = useState('');
 
+  const [items, setItems] = useState<Item[]>([
+    {
+      description: '',
+      quantity: 1,
+      price: 0,
+    },
+  ]);
+
+  const addItem = () => {
+    setItems([
+      ...items,
+      {
+        description: '',
+        quantity: 1,
+        price: 0,
+      },
+    ]);
+  };
+
+  const removeItem = (index: number) => {
+    const updated = [...items];
+
+    updated.splice(index, 1);
+
+    setItems(updated);
+  };
+
+  const updateItem = (
+    index: number,
+    field: keyof Item,
+    value: string | number
+  ) => {
+    const updated = [...items];
+
+    updated[index][field] = value as never;
+
+    setItems(updated);
+  };
+
+  const total = items.reduce(
+    (sum, item) =>
+      sum + item.quantity * item.price,
+    0
+  );
+
   const downloadPDF = async () => {
-    const element = invoiceRef.current;
+    const element = pdfRef.current;
 
     if (!element) return;
 
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
+      logging: false,
     });
 
     const imgData = canvas.toDataURL('image/png');
 
-    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-
-    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth =
+      pdf.internal.pageSize.getWidth();
 
     const pdfHeight =
-      (imgProps.height * pdfWidth) / imgProps.width;
+      (canvas.height * pdfWidth) / canvas.width;
 
     pdf.addImage(
       imgData,
@@ -45,165 +98,257 @@ export default function InvoicePage() {
       pdfHeight
     );
 
-    pdf.save(`${invoiceNo}.pdf`);
+    pdf.save(`${docNumber}.pdf`);
   };
 
   return (
-    <main className="min-h-screen bg-[#f5f5f5] px-4 py-10 md:px-10">
+    <main className="min-h-screen bg-[#f5f5f5] py-10 px-4 md:px-8">
 
-      {/* PAGE HEADER */}
-      <div className="max-w-7xl mx-auto mb-10">
-        <h1
-          className="
-            text-4xl md:text-6xl
-            font-black
-            text-black
-          "
-        >
-          Invoice &
-          <span className="text-[#D4AF37]">
-            {' '}Quotation Generator
-          </span>
-        </h1>
+      <div className="max-w-7xl mx-auto">
 
-        <p className="mt-5 text-gray-600 text-lg">
-          Create professional invoices and quotations
-          for Golden H.N Hlase Upholstery.
-        </p>
-      </div>
+        {/* HEADER */}
+        <div className="mb-10">
 
-      {/* MOBILE RESPONSIVE GRID */}
-      <div
-        className="
-          max-w-7xl mx-auto
-          grid
-          lg:grid-cols-2
-          gap-10
-          items-start
-        "
-      >
+          <h1
+            className="
+              text-4xl md:text-6xl
+              font-black
+              text-black
+            "
+          >
+            Invoice &
+            <span className="text-[#D4AF37]">
+              {' '}Quotation Generator
+            </span>
+          </h1>
 
-        {/* FORM SIDE */}
+          <p className="mt-4 text-gray-600 text-lg">
+            Create professional quotations and invoices.
+          </p>
+        </div>
+
         <div
           className="
-            bg-white
-            rounded-[30px]
-            p-6 md:p-10
-            shadow-xl
-            border border-gray-200
+            grid
+            lg:grid-cols-2
+            gap-10
+            items-start
           "
         >
 
-          <h2 className="text-3xl font-bold mb-8">
-            Enter Invoice Details
-          </h2>
+          {/* LEFT SIDE */}
+          <div
+            className="
+              bg-white
+              rounded-[30px]
+              shadow-xl
+              p-6 md:p-8
+            "
+          >
 
-          <div className="space-y-5">
+            <h2 className="text-3xl font-bold mb-8">
+              Client Information
+            </h2>
 
-            <input
-              type="text"
-              placeholder="Customer Name"
-              value={customer}
-              onChange={(e) =>
-                setCustomer(e.target.value)
-              }
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                border border-gray-300
-                outline-none
-                focus:border-[#D4AF37]
-              "
-            />
+            <div className="space-y-5">
 
-            <input
-              type="text"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) =>
-                setPhone(e.target.value)
-              }
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                border border-gray-300
-                outline-none
-                focus:border-[#D4AF37]
-              "
-            />
+              <input
+                type="text"
+                placeholder="Customer Name"
+                value={customer}
+                onChange={(e) =>
+                  setCustomer(e.target.value)
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  border border-gray-300
+                  outline-none
+                  focus:border-[#D4AF37]
+                "
+              />
 
-            <input
-              type="text"
-              placeholder="Service"
-              value={service}
-              onChange={(e) =>
-                setService(e.target.value)
-              }
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                border border-gray-300
-                outline-none
-                focus:border-[#D4AF37]
-              "
-            />
+              <input
+                type="text"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) =>
+                  setPhone(e.target.value)
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  border border-gray-300
+                  outline-none
+                  focus:border-[#D4AF37]
+                "
+              />
 
-            <input
-              type="text"
-              placeholder="Amount"
-              value={amount}
-              onChange={(e) =>
-                setAmount(e.target.value)
-              }
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                border border-gray-300
-                outline-none
-                focus:border-[#D4AF37]
-              "
-            />
+              <input
+                type="text"
+                placeholder="Document Number"
+                value={docNumber}
+                onChange={(e) =>
+                  setDocNumber(e.target.value)
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  border border-gray-300
+                  outline-none
+                  focus:border-[#D4AF37]
+                "
+              />
 
-            <input
-              type="text"
-              placeholder="Invoice Number"
-              value={invoiceNo}
-              onChange={(e) =>
-                setInvoiceNo(e.target.value)
-              }
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                border border-gray-300
-                outline-none
-                focus:border-[#D4AF37]
-              "
-            />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) =>
+                  setDate(e.target.value)
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  border border-gray-300
+                  outline-none
+                  focus:border-[#D4AF37]
+                "
+              />
+            </div>
 
-            <input
-              type="date"
-              value={date}
-              onChange={(e) =>
-                setDate(e.target.value)
-              }
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                border border-gray-300
-                outline-none
-                focus:border-[#D4AF37]
-              "
-            />
+            {/* ITEMS */}
+            <div className="mt-10">
 
+              <div
+                className="
+                  flex items-center
+                  justify-between
+                  mb-6
+                "
+              >
+
+                <h3 className="text-2xl font-bold">
+                  Services / Items
+                </h3>
+
+                <button
+                  onClick={addItem}
+                  className="
+                    px-5 py-3
+                    rounded-full
+                    bg-[#D4AF37]
+                    text-black
+                    font-semibold
+                  "
+                >
+                  Add Item
+                </button>
+              </div>
+
+              <div className="space-y-6">
+
+                {items.map((item, index) => (
+                  <div
+                    key={index}
+                    className="
+                      border
+                      border-gray-200
+                      rounded-3xl
+                      p-5
+                      bg-[#fafafa]
+                    "
+                  >
+
+                    <div className="space-y-4">
+
+                      <input
+                        type="text"
+                        placeholder="Service Description"
+                        value={item.description}
+                        onChange={(e) =>
+                          updateItem(
+                            index,
+                            'description',
+                            e.target.value
+                          )
+                        }
+                        className="
+                          w-full
+                          p-4
+                          rounded-2xl
+                          border border-gray-300
+                        "
+                      />
+
+                      <div className="grid grid-cols-2 gap-4">
+
+                        <input
+                          type="number"
+                          placeholder="Qty"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateItem(
+                              index,
+                              'quantity',
+                              Number(e.target.value)
+                            )
+                          }
+                          className="
+                            w-full
+                            p-4
+                            rounded-2xl
+                            border border-gray-300
+                          "
+                        />
+
+                        <input
+                          type="number"
+                          placeholder="Price"
+                          value={item.price}
+                          onChange={(e) =>
+                            updateItem(
+                              index,
+                              'price',
+                              Number(e.target.value)
+                            )
+                          }
+                          className="
+                            w-full
+                            p-4
+                            rounded-2xl
+                            border border-gray-300
+                          "
+                        />
+                      </div>
+
+                      {items.length > 1 && (
+                        <button
+                          onClick={() =>
+                            removeItem(index)
+                          }
+                          className="
+                            text-red-500
+                            font-semibold
+                          "
+                        >
+                          Remove Item
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* DOWNLOAD */}
             <button
               onClick={downloadPDF}
               className="
+                mt-10
                 w-full
                 py-5
                 rounded-full
@@ -213,211 +358,221 @@ export default function InvoicePage() {
                 text-lg
                 hover:scale-[1.02]
                 transition
-                shadow-xl
               "
             >
               Download PDF
             </button>
           </div>
-        </div>
 
-        {/* PREVIEW SIDE */}
-        <div
-          className="
-            overflow-x-auto
-          "
-        >
-          <div
-            ref={invoiceRef}
-            className="
-              bg-white
-              min-h-[1100px]
-              p-6 md:p-12
-              rounded-[30px]
-              shadow-2xl
-              text-black
-              min-w-[320px]
-            "
-          >
+          {/* RIGHT SIDE PDF */}
+          <div className="overflow-auto">
 
-            {/* TOP */}
             <div
+              ref={pdfRef}
               className="
-                flex
-                flex-col md:flex-row
-                md:items-center
-                md:justify-between
-                gap-8
-                border-b
-                border-gray-200
-                pb-10
+                bg-white
+                rounded-[30px]
+                shadow-2xl
+                p-6 md:p-12
+                min-w-[340px]
               "
             >
 
-              <div>
-
-                <img
-                  src="/logo.png"
-                  alt="Logo"
-                  className="w-32 object-contain"
-                />
-
-                <h2
-                  className="
-                    text-3xl
-                    font-black
-                    mt-4
-                  "
-                >
-                  Golden H.N Hlase Upholstery
-                </h2>
-
-                <p className="mt-4 text-gray-600 leading-7">
-                  8 Jacaranda, Arboretum,
-                  Richards Bay, 3900
-                </p>
-
-                <p className="text-gray-600">
-                  061 310 5030
-                </p>
-
-                <p className="text-gray-600">
-                  www.goldenhnhlase.co.za
-                </p>
-              </div>
-
-              <div className="text-left md:text-right">
-
-                <h1
-                  className="
-                    text-5xl
-                    font-black
-                    text-[#D4AF37]
-                  "
-                >
-                  INVOICE
-                </h1>
-
-                <p className="mt-5">
-                  <strong>No:</strong> {invoiceNo}
-                </p>
-
-                <p className="mt-2">
-                  <strong>Date:</strong> {date}
-                </p>
-              </div>
-            </div>
-
-            {/* CUSTOMER */}
-            <div className="mt-12">
-
-              <h3
-                className="
-                  text-2xl
-                  font-bold
-                  mb-5
-                "
-              >
-                Bill To:
-              </h3>
-
-              <p className="text-lg">
-                {customer || 'Customer Name'}
-              </p>
-
-              <p className="text-gray-600 mt-2">
-                {phone || 'Phone Number'}
-              </p>
-            </div>
-
-            {/* TABLE */}
-            <div className="mt-12 overflow-x-auto">
-
-              <table className="w-full border-collapse">
-
-                <thead>
-
-                  <tr className="bg-[#D4AF37] text-black">
-
-                    <th className="p-5 text-left">
-                      Service
-                    </th>
-
-                    <th className="p-5 text-left">
-                      Amount
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-
-                  <tr className="border-b">
-
-                    <td className="p-5">
-                      {service || 'Service'}
-                    </td>
-
-                    <td className="p-5">
-                      R {amount || '0.00'}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* TOTAL */}
-            <div className="mt-16 flex justify-end">
-
+              {/* TOP */}
               <div
                 className="
-                  w-full md:w-[320px]
-                  bg-[#fafafa]
-                  rounded-3xl
-                  p-8
+                  flex
+                  flex-col md:flex-row
+                  justify-between
+                  gap-8
+                  border-b
+                  pb-10
+                "
+              >
+
+                <div>
+
+                  <img
+                    src="/logo.png"
+                    alt="Logo"
+                    className="w-28"
+                  />
+
+                  <h2
+                    className="
+                      text-3xl
+                      font-black
+                      mt-4
+                    "
+                  >
+                    Golden H.N Hlase Upholstery
+                  </h2>
+
+                  <p className="mt-4 text-gray-600">
+                    8 Jacaranda, Arboretum,
+                    Richards Bay, 3900
+                  </p>
+
+                  <p className="text-gray-600">
+                    061 310 5030
+                  </p>
+
+                  <p className="text-gray-600">
+                    www.goldenhnhlase.co.za
+                  </p>
+                </div>
+
+                <div className="md:text-right">
+
+                  <h1
+                    className="
+                      text-5xl
+                      font-black
+                      text-[#D4AF37]
+                    "
+                  >
+                    QUOTATION
+                  </h1>
+
+                  <p className="mt-5">
+                    <strong>No:</strong>{' '}
+                    {docNumber}
+                  </p>
+
+                  <p className="mt-2">
+                    <strong>Date:</strong>{' '}
+                    {date}
+                  </p>
+                </div>
+              </div>
+
+              {/* CUSTOMER */}
+              <div className="mt-12">
+
+                <h3 className="text-2xl font-bold">
+                  Customer Details
+                </h3>
+
+                <p className="mt-5 text-lg">
+                  {customer || 'Customer Name'}
+                </p>
+
+                <p className="text-gray-600 mt-2">
+                  {phone || 'Phone Number'}
+                </p>
+              </div>
+
+              {/* TABLE */}
+              <div className="mt-12 overflow-x-auto">
+
+                <table className="w-full">
+
+                  <thead>
+
+                    <tr className="bg-[#D4AF37] text-black">
+
+                      <th className="p-4 text-left">
+                        Description
+                      </th>
+
+                      <th className="p-4 text-left">
+                        Qty
+                      </th>
+
+                      <th className="p-4 text-left">
+                        Price
+                      </th>
+
+                      <th className="p-4 text-left">
+                        Total
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {items.map((item, index) => (
+                      <tr
+                        key={index}
+                        className="border-b"
+                      >
+
+                        <td className="p-4">
+                          {item.description}
+                        </td>
+
+                        <td className="p-4">
+                          {item.quantity}
+                        </td>
+
+                        <td className="p-4">
+                          R {item.price}
+                        </td>
+
+                        <td className="p-4">
+                          R{' '}
+                          {item.quantity *
+                            item.price}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* TOTAL */}
+              <div
+                className="
+                  mt-12
+                  flex justify-end
                 "
               >
 
                 <div
                   className="
-                    flex
-                    justify-between
-                    text-2xl
-                    font-black
+                    bg-[#fafafa]
+                    rounded-3xl
+                    p-8
+                    w-full md:w-[300px]
                   "
                 >
-                  <span>Total</span>
 
-                  <span className="text-[#D4AF37]">
-                    R {amount || '0.00'}
-                  </span>
+                  <div
+                    className="
+                      flex justify-between
+                      text-2xl
+                      font-black
+                    "
+                  >
+
+                    <span>Total</span>
+
+                    <span className="text-[#D4AF37]">
+                      R {total}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* FOOTER */}
-            <div
-              className="
-                mt-20
-                pt-10
-                border-t
-                border-gray-200
-                text-center
-              "
-            >
-
-              <h3
+              {/* FOOTER */}
+              <div
                 className="
-                  text-2xl
-                  font-bold
+                  mt-20
+                  border-t
+                  pt-10
+                  text-center
                 "
               >
-                Thank You For Your Business
-              </h3>
 
-              <p className="mt-4 text-gray-500 leading-7">
-                Premium upholstery, luxury seat covers,
-                furniture restoration, and custom interiors.
-              </p>
+                <h3 className="text-2xl font-bold">
+                  Thank You For Your Business
+                </h3>
+
+                <p className="mt-4 text-gray-500">
+                  Premium upholstery, luxury seat covers,
+                  and furniture restoration services.
+                </p>
+              </div>
             </div>
           </div>
         </div>
