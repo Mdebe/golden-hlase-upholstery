@@ -65,17 +65,29 @@ export default function GeneratorPage() {
   );
 
   const downloadPDF = async () => {
+  try {
     const element = pdfRef.current;
 
     if (!element) return;
 
+    // wait for rendering
+    await new Promise((resolve) =>
+      setTimeout(resolve, 500)
+    );
+
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
       logging: false,
+      scrollY: -window.scrollY,
     });
 
-    const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL(
+      'image/png',
+      1.0
+    );
 
     const pdf = new jsPDF({
       orientation: 'portrait',
@@ -83,23 +95,60 @@ export default function GeneratorPage() {
       format: 'a4',
     });
 
-    const pdfWidth =
+    const pageWidth =
       pdf.internal.pageSize.getWidth();
 
-    const pdfHeight =
-      (canvas.height * pdfWidth) / canvas.width;
+    const pageHeight =
+      pdf.internal.pageSize.getHeight();
 
+    const imgWidth = pageWidth;
+
+    const imgHeight =
+      (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+
+    let position = 0;
+
+    // First page
     pdf.addImage(
       imgData,
       'PNG',
       0,
-      0,
-      pdfWidth,
-      pdfHeight
+      position,
+      imgWidth,
+      imgHeight
     );
 
+    heightLeft -= pageHeight;
+
+    // Multiple pages support
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+
+      pdf.addPage();
+
+      pdf.addImage(
+        imgData,
+        'PNG',
+        0,
+        position,
+        imgWidth,
+        imgHeight
+      );
+
+      heightLeft -= pageHeight;
+    }
+
     pdf.save(`${docNumber}.pdf`);
-  };
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      'Failed to generate PDF. Please try again.'
+    );
+  }
+};
 
   return (
     <main className="min-h-screen bg-[#f5f5f5] py-10 px-4 md:px-8">
