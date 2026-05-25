@@ -15,28 +15,28 @@ const services = [
   {
     title: 'Luxury Seat Covers',
     icon: Car,
-    image: '/images/service-seat.jpg',
+    image: '/images/seat.jpeg',
     description:
       'Premium custom seat covers designed for comfort, durability, and luxury vehicle interiors.',
   },
   {
     title: 'Modern Upholstery',
     icon: Sofa,
-    image: '/images/service-sofa.jpg',
+    image: '/images/hero.jpeg',
     description:
       'Luxury sofa upholstery, dining chairs, headboards, and elegant furniture restoration.',
   },
   {
     title: 'Furniture Repairs',
     icon: Wrench,
-    image: '/images/service-repair.jpg',
+    image: '/images/cover.jpeg',
     description:
       'Professional foam replacement, cushion repairs, stitching, and frame restoration.',
   },
   {
     title: 'Commercial Upholstery',
     icon: Building2,
-    image: '/images/service-commercial.jpg',
+    image: '/images/about.jpeg',
     description:
       'Office seating, hotel furniture, restaurant booths, and waiting room upholstery.',
   },

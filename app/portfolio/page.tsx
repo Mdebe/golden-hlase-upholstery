@@ -10,32 +10,32 @@ import {
 
 const portfolio = [
   {
-    image: '/images/portfolio1.jpg',
+    image: '/images/seat.jpeg',
     title: 'Luxury Seat Covers',
     category: 'Vehicle Upholstery',
   },
   {
-    image: '/images/portfolio2.jpg',
+    image: '/images/sofaa.jpeg',
     title: 'Modern Sofa Restoration',
     category: 'Furniture Upholstery',
   },
   {
-    image: '/images/portfolio3.jpg',
+    image: '/images/golden.jpg',
     title: 'Leather Interior Upgrade',
     category: 'Custom Interiors',
   },
   {
-    image: '/images/portfolio4.jpg',
+    image: '/images/coverr.jpeg',
     title: 'Premium Lounge Suite',
     category: 'Luxury Furniture',
   },
   {
-    image: '/images/portfolio5.jpg',
+    image: '/images/hero.jpeg',
     title: 'Dining Chair Upholstery',
     category: 'Furniture Repairs',
   },
   {
-    image: '/images/portfolio6.jpg',
+    image: '/images/cove.jpeg',
     title: 'Custom Vehicle Interior',
     category: 'Seat Cover Specialists',
   },

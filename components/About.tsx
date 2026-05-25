@@ -50,7 +50,7 @@ export default function About() {
         >
           {/* Main Image */}
           <img
-            src="/images/about.jpg"
+            src="/images/about.jpeg"
             alt="Luxury Upholstery"
             className="
               rounded-[35px]

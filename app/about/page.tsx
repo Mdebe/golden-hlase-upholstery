@@ -193,7 +193,7 @@ export default function AboutPage() {
               className="relative"
             >
               <img
-                src="/images/about.jpg"
+                src="/images/seat.jpeg"
                 alt="Luxury Upholstery"
                 className="
                   w-full

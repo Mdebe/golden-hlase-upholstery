@@ -12,7 +12,7 @@ const services = [
   {
     title: 'Seat Cover Specialists',
     icon: Car,
-    image: '/images/seat-cover-12.jpeg',
+    image: '/images/coverr.jpeg',
     items: [
       'Custom Seat Covers',
       'Leather Seat Covers',
@@ -34,7 +34,7 @@ const services = [
   {
     title: 'Furniture Repairs',
     icon: Wrench,
-    image: '/images/repairs.jpg',
+    image: '/images/cover.jpeg',
     items: [
       'Foam Replacement',
       'Frame Repairs',
@@ -45,7 +45,7 @@ const services = [
   {
     title: 'Commercial Upholstery',
     icon: Building2,
-    image: '/images/commercial.jpeg',
+    image: '/images/com.jpeg',
     items: [
       'Hotel Furniture',
       'Office Seating',
