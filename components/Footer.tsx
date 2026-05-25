@@ -93,7 +93,9 @@ export default function Footer() {
             >
               Services
             </Link>
-
+            <Link href="/generator">
+    Invoice Generator
+  </Link>
             <Link
               href="/contact"
               className="hover:text-yellow-500 transition"
