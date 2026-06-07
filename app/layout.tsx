@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     'Richards Bay upholstery',
     'luxury upholstery',
     'Golden H.N Hlase Upholstery',
+    'empangeni upholstery',
   ],
 
   authors: [
