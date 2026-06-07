@@ -2,9 +2,6 @@
 
 import { useRef, useState } from 'react';
 
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-
 type Item = {
   description: string;
   quantity: number;
@@ -12,7 +9,7 @@ type Item = {
 };
 
 export default function GeneratorPage() {
-  const pdfRef = useRef<HTMLDivElement>(null);
+  const quoteRef = useRef<HTMLDivElement>(null);
 
   const [customer, setCustomer] = useState('');
   const [phone, setPhone] = useState('');
@@ -64,115 +61,69 @@ export default function GeneratorPage() {
     0
   );
 
-  const downloadPDF = async () => {
-  try {
-    const element = pdfRef.current;
+  const saveQuotationImage = async () => {
+    try {
+      const element = quoteRef.current;
 
-    if (!element) return;
+      if (!element) return;
 
-    // wait for rendering
-    await new Promise((resolve) =>
-      setTimeout(resolve, 500)
-    );
+      const html2canvas =
+        (await import('html2canvas')).default;
 
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-      scrollY: -window.scrollY,
-    });
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
 
-    const imgData = canvas.toDataURL(
-      'image/png',
-      1.0
-    );
-
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-
-    const pageWidth =
-      pdf.internal.pageSize.getWidth();
-
-    const pageHeight =
-      pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pageWidth;
-
-    const imgHeight =
-      (canvas.height * imgWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-
-    let position = 0;
-
-    // First page
-    pdf.addImage(
-      imgData,
-      'PNG',
-      0,
-      position,
-      imgWidth,
-      imgHeight
-    );
-
-    heightLeft -= pageHeight;
-
-    // Multiple pages support
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-
-      pdf.addPage();
-
-      pdf.addImage(
-        imgData,
-        'PNG',
-        0,
-        position,
-        imgWidth,
-        imgHeight
+      const image = canvas.toDataURL(
+        'image/png',
+        1.0
       );
 
-      heightLeft -= pageHeight;
+      const link = document.createElement('a');
+
+      link.href = image;
+
+      link.download = `${docNumber}.png`;
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error(error);
+
+      alert('Failed to save quotation image.');
     }
-
-    pdf.save(`${docNumber}.pdf`);
-  } catch (error) {
-    console.error(error);
-
-    alert(
-      'Failed to generate PDF. Please try again.'
-    );
-  }
-};
+  };
 
   return (
-    <main className="min-h-screen bg-[#f5f5f5] py-10 px-4 md:px-8">
+    <main className="min-h-screen bg-[#050505] py-8 px-4 md:px-8">
 
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="mb-10">
+        <div className="mb-10 text-center md:text-left">
 
           <h1
             className="
               text-4xl md:text-6xl
               font-black
-              text-black
+              text-white
+              leading-tight
             "
           >
-            Invoice &
+            Quotation
             <span className="text-[#D4AF37]">
-              {' '}Quotation Generator
+              {' '}Generator
             </span>
           </h1>
 
-          <p className="mt-4 text-gray-600 text-lg">
-            Create professional quotations and invoices.
+          <p className="mt-4 text-gray-400 text-lg">
+            Create and save professional quotation images.
           </p>
         </div>
 
@@ -188,14 +139,15 @@ export default function GeneratorPage() {
           {/* LEFT SIDE */}
           <div
             className="
-              bg-white
+              bg-[#111111]
+              border border-[#D4AF37]/10
               rounded-[30px]
-              shadow-xl
               p-6 md:p-8
+              shadow-2xl
             "
           >
 
-            <h2 className="text-3xl font-bold mb-8">
+            <h2 className="text-3xl font-bold mb-8 text-white">
               Client Information
             </h2>
 
@@ -212,7 +164,9 @@ export default function GeneratorPage() {
                   w-full
                   p-4
                   rounded-2xl
-                  border border-gray-300
+                  border border-[#D4AF37]/10
+                  bg-black
+                  text-white
                   outline-none
                   focus:border-[#D4AF37]
                 "
@@ -229,7 +183,9 @@ export default function GeneratorPage() {
                   w-full
                   p-4
                   rounded-2xl
-                  border border-gray-300
+                  border border-[#D4AF37]/10
+                  bg-black
+                  text-white
                   outline-none
                   focus:border-[#D4AF37]
                 "
@@ -237,7 +193,7 @@ export default function GeneratorPage() {
 
               <input
                 type="text"
-                placeholder="Document Number"
+                placeholder="Quotation Number"
                 value={docNumber}
                 onChange={(e) =>
                   setDocNumber(e.target.value)
@@ -246,7 +202,9 @@ export default function GeneratorPage() {
                   w-full
                   p-4
                   rounded-2xl
-                  border border-gray-300
+                  border border-[#D4AF37]/10
+                  bg-black
+                  text-white
                   outline-none
                   focus:border-[#D4AF37]
                 "
@@ -262,7 +220,9 @@ export default function GeneratorPage() {
                   w-full
                   p-4
                   rounded-2xl
-                  border border-gray-300
+                  border border-[#D4AF37]/10
+                  bg-black
+                  text-white
                   outline-none
                   focus:border-[#D4AF37]
                 "
@@ -280,7 +240,7 @@ export default function GeneratorPage() {
                 "
               >
 
-                <h3 className="text-2xl font-bold">
+                <h3 className="text-2xl font-bold text-white">
                   Services / Items
                 </h3>
 
@@ -292,6 +252,8 @@ export default function GeneratorPage() {
                     bg-[#D4AF37]
                     text-black
                     font-semibold
+                    hover:scale-105
+                    transition
                   "
                 >
                   Add Item
@@ -304,11 +266,10 @@ export default function GeneratorPage() {
                   <div
                     key={index}
                     className="
-                      border
-                      border-gray-200
+                      bg-black
+                      border border-[#D4AF37]/10
                       rounded-3xl
                       p-5
-                      bg-[#fafafa]
                     "
                   >
 
@@ -329,7 +290,10 @@ export default function GeneratorPage() {
                           w-full
                           p-4
                           rounded-2xl
-                          border border-gray-300
+                          border border-[#D4AF37]/10
+                          bg-[#111111]
+                          text-white
+                          outline-none
                         "
                       />
 
@@ -350,7 +314,10 @@ export default function GeneratorPage() {
                             w-full
                             p-4
                             rounded-2xl
-                            border border-gray-300
+                            border border-[#D4AF37]/10
+                            bg-[#111111]
+                            text-white
+                            outline-none
                           "
                         />
 
@@ -369,7 +336,10 @@ export default function GeneratorPage() {
                             w-full
                             p-4
                             rounded-2xl
-                            border border-gray-300
+                            border border-[#D4AF37]/10
+                            bg-[#111111]
+                            text-white
+                            outline-none
                           "
                         />
                       </div>
@@ -380,7 +350,7 @@ export default function GeneratorPage() {
                             removeItem(index)
                           }
                           className="
-                            text-red-500
+                            text-red-400
                             font-semibold
                           "
                         >
@@ -393,9 +363,9 @@ export default function GeneratorPage() {
               </div>
             </div>
 
-            {/* DOWNLOAD */}
+            {/* SAVE BUTTON */}
             <button
-              onClick={downloadPDF}
+              onClick={saveQuotationImage}
               className="
                 mt-10
                 w-full
@@ -407,17 +377,18 @@ export default function GeneratorPage() {
                 text-lg
                 hover:scale-[1.02]
                 transition
+                shadow-xl shadow-[#D4AF37]/20
               "
             >
-              Download PDF
+              Save Quotation Image
             </button>
           </div>
 
-          {/* RIGHT SIDE PDF */}
+          {/* RIGHT SIDE */}
           <div className="overflow-auto">
 
             <div
-              ref={pdfRef}
+              ref={quoteRef}
               className="
                 bg-white
                 rounded-[30px]
@@ -435,6 +406,7 @@ export default function GeneratorPage() {
                   justify-between
                   gap-8
                   border-b
+                  border-gray-200
                   pb-10
                 "
               >
@@ -444,7 +416,7 @@ export default function GeneratorPage() {
                   <img
                     src="/logo.png"
                     alt="Logo"
-                    className="w-28"
+                    className="w-32"
                   />
 
                   <h2
@@ -514,7 +486,7 @@ export default function GeneratorPage() {
               {/* TABLE */}
               <div className="mt-12 overflow-x-auto">
 
-                <table className="w-full">
+                <table className="w-full min-w-[600px]">
 
                   <thead>
 
@@ -582,7 +554,7 @@ export default function GeneratorPage() {
                     bg-[#fafafa]
                     rounded-3xl
                     p-8
-                    w-full md:w-[300px]
+                    w-full md:w-[320px]
                   "
                 >
 
@@ -608,6 +580,7 @@ export default function GeneratorPage() {
                 className="
                   mt-20
                   border-t
+                  border-gray-200
                   pt-10
                   text-center
                 "
@@ -617,9 +590,9 @@ export default function GeneratorPage() {
                   Thank You For Your Business
                 </h3>
 
-                <p className="mt-4 text-gray-500">
+                <p className="mt-4 text-gray-500 leading-8">
                   Premium upholstery, luxury seat covers,
-                  and furniture restoration services.
+                  vehicle interiors, and furniture restoration.
                 </p>
               </div>
             </div>
