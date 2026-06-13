@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     'luxury upholstery',
     'Golden H.N Hlase Upholstery',
     'empangeni upholstery',
+    'Durban upholstery',
+    'South Africa upholstery',
+    'custom upholstery',
   ],
 
   authors: [
